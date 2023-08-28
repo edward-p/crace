@@ -1,19 +1,38 @@
-use std::collections::HashMap;
-use serde::{Serialize, Deserialize};
-use gloo_storage::Storage;
+use gloo_storage::{LocalStorage, Storage};
+use serde::{Deserialize, Serialize};
+use std::collections::{BTreeSet, HashMap};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Data{
-    last_position: HashMap<String, usize>,
-    wrong_list: Vec<String>,
+pub struct Data {
+    pub last_position: HashMap<String, usize>,
+    pub wrong_list: BTreeSet<String>,
 }
 
 impl Default for Data {
     fn default() -> Self {
-        let mut last_position:HashMap<String,usize>=HashMap::new();
+        let mut last_position: HashMap<String, usize> = HashMap::new();
         last_position.insert("A".into(), 0);
         last_position.insert("B".into(), 0);
         last_position.insert("C".into(), 0);
-        Self { last_position: last_position, wrong_list: Vec::new() }
+        Self {
+            last_position: last_position,
+            wrong_list: BTreeSet::new(),
+        }
+    }
+}
+
+impl Data {
+    pub fn get_from_storage() -> Self {
+        let data = LocalStorage::get::<Data>("data");
+        if let Ok(d) = data {
+            return d;
+        } else {
+            let d = Data::default();
+            let _ = LocalStorage::set("data", &d);
+            return d;
+        }
+    }
+    pub fn save(&self){
+        let _ = LocalStorage::set("data", self);
     }
 }

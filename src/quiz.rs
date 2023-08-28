@@ -1,9 +1,4 @@
-use std::{
-    error::Error,
-    fmt::Display,
-    fs::File,
-    io::{BufRead, BufReader},
-};
+use std::{error::Error, fmt::Display};
 
 use linked_hash_map::LinkedHashMap;
 use rand::{distributions::Standard, prelude::Distribution, Rng};
@@ -22,7 +17,7 @@ impl From<&String> for QuizType {
             "a" | "A" => Self::ClassA,
             "b" | "B" => Self::ClassB,
             "c" | "C" => Self::ClassC,
-            _ => Self::All
+            _ => Self::All,
         }
     }
 }
@@ -38,12 +33,35 @@ impl Display for QuizType {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Choice {
     A,
     B,
     C,
     D,
+}
+
+impl Display for Choice {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::A => write!(f, "A"),
+            Self::B => write!(f, "B"),
+            Self::C => write!(f, "C"),
+            Self::D => write!(f, "D"),
+        }
+    }
+}
+
+impl From<usize> for Choice {
+    fn from(value: usize) -> Self {
+        match value % 4 {
+            0 => Self::A,
+            1 => Self::B,
+            2 => Self::C,
+            3 => Self::D,
+            _ => todo!(),
+        }
+    }
 }
 
 impl Distribution<Choice> for Standard {
@@ -57,13 +75,23 @@ impl Distribution<Choice> for Standard {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Quiz {
-    index: String,
-    question: String,
-    picture: String,
-    choice: Vec<String>,
-    answer: Choice,
+    pub index: String,
+    pub question: String,
+    pub picture: String,
+    pub choice: Vec<String>,
+    pub answer: Choice,
+}
+
+impl Quiz {
+    pub fn update(&mut self, value: Self){
+        self.index=value.index;
+        self.question=value.question;
+        self.picture=value.picture;
+        self.choice=value.choice;
+        self.answer=value.answer;
+    }
 }
 
 impl Default for Quiz {
@@ -78,15 +106,14 @@ impl Default for Quiz {
     }
 }
 
-pub fn load_quiz(quiz_type: QuizType) -> Result<LinkedHashMap<String, Quiz>, Box<dyn Error>> {
+pub async fn load_quiz(quiz_type: QuizType) -> Result<LinkedHashMap<String, Quiz>, Box<dyn Error>> {
     let mut map = LinkedHashMap::new();
 
-    let file = File::open(format!("resources/{}", quiz_type))?;
-    let reader = BufReader::new(file);
-
+    let url = format!("{}/resources/{}", "http://localhost:8080/", quiz_type);
+    let text = reqwest::get(url).await?.text().await?;
     let mut q = Quiz::default();
-    for li in reader.lines() {
-        let line = li?;
+    for li in text.lines() {
+        let line = li;
 
         if line.len() < 3 {
             continue;
@@ -113,14 +140,4 @@ pub fn load_quiz(quiz_type: QuizType) -> Result<LinkedHashMap<String, Quiz>, Box
     }
 
     Ok(map)
-}
-
-#[test]
-fn test_read() {
-    let res = load_quiz(QuizType::ClassB);
-    if let Ok(map) = res {
-        println!("{:?}", map);
-    } else {
-        assert!(false);
-    }
 }

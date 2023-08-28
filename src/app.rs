@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
+use crate::{quiz::Quiz, quizlist::QuizList, wronglist::WrongList};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
-use crate::quizlist::QuizList;
 
 // ANCHOR: router
 #[derive(Routable, Clone)]
@@ -16,6 +16,8 @@ enum Route {
         #[end_nest]
         #[route("/:name")]
         QuizList { name: String },
+        #[route("/wronglist")]
+        WrongList {},
     #[end_layout]
     #[route("/:..route")]
     PageNotFound {
@@ -28,8 +30,9 @@ enum Route {
 fn NavBar(cx: Scope) -> Element {
     render! {
         nav {
-            ul {
-                li { Link { to: Route::ExamClass {}, "顺序练习" } }
+            div {
+                a { Link { to: Route::ExamClass {}, "顺序练习" } }
+                a { Link { to: Route::WrongList {}, "错题列表" } }
             }
         }
         Outlet::<Route> {}
@@ -39,31 +42,28 @@ fn NavBar(cx: Scope) -> Element {
 #[inline_props]
 fn ExamClass(cx: Scope) -> Element {
     render! {
-        h4 { "选择考试类型" }
-        ul {
-            li {
+        nav {
+            a {
                 Link {
-                    to: Route::QuizList { name: "A".into() },
+                    to: Route::QuizList { name: "A".into()},
                     "A类考试"
                 }
             }
-            li {
+            a {
                 Link {
-                    to: Route::QuizList { name: "B".into() },
+                    to: Route::QuizList { name: "B".into()},
                     "B类考试"
                 }
             }
-            li {
+            a {
                 Link {
-                    to: Route::QuizList { name: "C".into() },
+                    to: Route::QuizList { name: "C".into()},
                     "C类考试"
                 }
             }
         }
     }
 }
-
-
 
 #[inline_props]
 fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
