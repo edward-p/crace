@@ -26,6 +26,9 @@ reload_html = true
 # which files or dirs will be watcher monitoring
 watch_path = ["src", "public"]
 
+# fix routing
+index_on_404 = true
+
 # include `assets` in web platform
 [web.resource]
 
@@ -43,4 +46,4 @@ script = []
 
 [bundle]
 publisher = "edward-p"
-copyright = "Copyright (c) BD8BTE. All rights reserved."
+copyright = "Copyright (c) edward-p (BD8BTE). All rights reserved."

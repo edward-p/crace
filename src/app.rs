@@ -9,15 +9,9 @@ use dioxus_router::prelude::*;
 enum Route {
     #[layout(NavBar)]
         #[route("/")]
-        Home{},
-        #[nest("/practice")]
-            #[layout(Practice)]
-              #[route("/")]
-              PracticeList {},
-              #[route("/quiz_list/:name")]
-              QuizList { name: String },
-            #[end_layout]
-          #[end_nest]
+        PracticeList {},
+        #[route("/practice/:name")]
+        QuizList { name: String },
         #[route("/wronglist")]
         WrongList {},
     #[end_layout]
@@ -28,32 +22,15 @@ enum Route {
 }
 // ANCHOR_END: router
 
-
-#[inline_props]
-fn Home(cx: Scope) -> Element {
-    render! {
-        h1 { "Home" }
-    }
-}
-
 #[inline_props]
 fn NavBar(cx: Scope) -> Element {
     render! {
         nav {
             ul {
                 li { Link { to: Route::PracticeList {}, "顺序练习" } }
-                // li { Link { to: Route::WrongList {}, "错题列表" } }
+                li { Link { to: Route::WrongList {}, "错题列表" } }
             }
         }
-        Outlet::<Route> {}
-    }
-}
-
-
-#[inline_props]
-fn Practice(cx: Scope) -> Element {
-    render! {
-        h4 { "顺序练习" }
         Outlet::<Route> {}
     }
 }
