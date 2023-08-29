@@ -1,11 +1,12 @@
 use gloo_storage::{LocalStorage, Storage};
+use linked_hash_set::LinkedHashSet;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeSet, HashMap};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Data {
     pub last_position: HashMap<String, usize>,
-    pub wrong_list: BTreeSet<String>,
+    pub wrong_list: LinkedHashSet<String>,
 }
 
 impl Default for Data {
@@ -16,7 +17,7 @@ impl Default for Data {
         last_position.insert("C".into(), 0);
         Self {
             last_position: last_position,
-            wrong_list: BTreeSet::new(),
+            wrong_list: LinkedHashSet::new(),
         }
     }
 }

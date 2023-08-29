@@ -25,12 +25,13 @@ enum Route {
 #[inline_props]
 fn NavBar(cx: Scope) -> Element {
     render! {
-        nav {
-            ul {
-                li { Link { to: Route::PracticeList {}, "顺序练习" } }
-                li { Link { to: Route::WrongList {}, "错题列表" } }
+            header{
+                nav {
+                        a { Link { to: Route::PracticeList {}, "顺序练习" } }
+                        a { Link { to: Route::WrongList {}, "错题列表" } }
+                }
             }
-        }
+
         Outlet::<Route> {}
     }
 }
