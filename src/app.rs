@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::{quizlist::QuizList, wronglist::WrongList};
+use crate::{quizlist::QuizList, wronglist::WrongList, data::Data};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -14,6 +14,8 @@ enum Route {
         QuizList { name: String },
         #[route("/wronglist")]
         WrongList {},
+        #[route("/clear")]
+        ClearStorage{},
     #[end_layout]
     #[route("/:..route")]
     PageNotFound {
@@ -30,11 +32,7 @@ fn NavBar(cx: Scope) -> Element {
                 nav {
                     Link { to: Route::PracticeList {}, "顺序练习" },
                     Link { to: Route::WrongList {}, "错题列表" },
-                    a { onclick: move|_|{
-
-                    },
-                    "清除练习记录"
-                    }
+                    Link { to: Route::ClearStorage {}, "清除练习记录" },
                 }
             }
         }
@@ -75,6 +73,14 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
             color: "red",
             "log:\nattemped to navigate to: {route:?}"
         }
+    }
+}
+
+#[inline_props]
+fn ClearStorage(cx: Scope) -> Element {
+    Data::clear();
+    render! {
+        h2 { "已清除练习记录!" }
     }
 }
 

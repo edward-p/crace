@@ -8,16 +8,34 @@ use dioxus::prelude::*;
 #[inline_props]
 pub fn QuizList(cx: Scope, name: String) -> Element {
     let quiz_data = use_future(cx, (), |_| load_quiz(QuizType::from(name)));
-
     // check if the future is resolved
     match quiz_data.value() {
         Some(Ok(quiz_list)) => {
             let data = Data::get_from_storage();
-            let mut num_index = data.last_position.get(name).unwrap().clone();
-            let quiz = use_state(cx, || quiz_list.get(num_index).unwrap().clone());
-            let state = use_state(cx, || "".to_string());
-            let disabled = use_state(cx, || "false".to_string());
+
+            let num_index = use_state(cx, || data.last_position.get(name).unwrap().clone());
+            let quiz_next = quiz_list.get(num_index.get().clone()).unwrap().clone();
+
+            let state = use_state(cx, || {
+                if data.correct_list.contains(&quiz_next.index){
+                    format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string())
+                }else{
+                    "".into()
+                }
+            });
+
+            let disabled = use_state(cx, || {
+                if data.correct_list.contains(&quiz_next.index){
+                    "true".to_string()
+                }else{
+                    "false".to_string()
+                }
+            });
+            
             let jump_to = use_state(cx, || 1_usize);
+
+            let quiz = use_state(cx, || quiz_next);
+
             render! {
                 h4 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
@@ -52,11 +70,16 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                         log::info!("Wrong!");
                                         let mut data = Data::get_from_storage();
                                         data.wrong_list.insert(quiz.index.clone());
+                                        data.correct_list.remove(&quiz.index);
                                         data.save();
                                         // add wrong indicator
+                                        disabled.set("true".into());
                                         state.set(format!("❌ 回答：{}, 正确答案：{}", Choice::from(i).to_string(), quiz.answer.to_string()));
                                     } else {
                                         log::info!("Correct!");
+                                        let mut data = Data::get_from_storage();
+                                        data.correct_list.insert(quiz.index.clone());
+                                        data.save();
                                         // clear state
                                         disabled.set("true".into());
                                         state.set(format!("✔️ 回答：{}, 正确答案：{}", Choice::from(i).to_string(), quiz.answer.to_string()));
@@ -76,14 +99,21 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     button {
                         onclick: move |_| {
                             let mut data = Data::get_from_storage();
-                            num_index = jump_to - 1;
-                            data.last_position.insert(name.clone(), num_index);
-                            quiz.set(quiz_list.get(num_index).unwrap().clone());
+                            let next_num_index = jump_to - 1;
+                            num_index.set(next_num_index);
+                            data.last_position.insert(name.clone(), next_num_index);
+                            quiz.set(quiz_list.get(next_num_index).unwrap().clone());
                             data.save();
     
-                            // clear button state
-                            disabled.set("false".into());
-                            state.set("".into());
+                            let quiz_next=quiz_list.get(next_num_index).unwrap();
+                            if data.correct_list.contains(&quiz_next.index){
+                                disabled.set("true".into());
+                                state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                            }else{
+                                // clear state
+                                disabled.set("false".into());
+                                state.set("".into());
+                            }
                         },
                         "跳转到"
                     },
@@ -111,37 +141,52 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     },
 
 
-                    if num_index > 0{
+                    if *num_index.get() > 0{
                         render!{
                             button {
                                 onclick: move |_| {
                                     let mut data = Data::get_from_storage();
-                                    num_index = num_index-1;
-                                    data.last_position.insert(name.clone(), num_index);
-                                    quiz.set(quiz_list.get(num_index).unwrap().clone());
+                                    let next_num_index = num_index-1;
+                                    num_index.set(next_num_index);
+                                    data.last_position.insert(name.clone(), next_num_index);
+                                    quiz.set(quiz_list.get(next_num_index).unwrap().clone());
                                     data.save();
 
-                                    // clear button state
-                                    disabled.set("false".into());
-                                    state.set("".into());
+                                    let quiz_next=quiz_list.get(next_num_index).unwrap();
+                                    if data.correct_list.contains(&quiz_next.index){
+                                        disabled.set("true".into());
+                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                                    }else{
+                                        // clear state
+                                        disabled.set("false".into());
+                                        state.set("".into());
+                                    }
                                 },
                                 "上一题"
                             },
                         }
                     }
-                    if num_index < quiz_list.len() - 1 {
+                    if *num_index.get() < quiz_list.len() - 1 {
                         render!{
                             button {
                             onclick: move |_| {
                                 let mut data = Data::get_from_storage();
-                                num_index = num_index+1;
-                                data.last_position.insert(name.clone(), num_index);
-                                quiz.set(quiz_list.get(num_index).unwrap().clone());
+                                let next_num_index = num_index+1;
+                                num_index.set(next_num_index);
+                                data.last_position.insert(name.clone(), next_num_index);
+                                let quiz_next=quiz_list.get(next_num_index).unwrap().clone();
+                                quiz.set(quiz_next);
                                 data.save();
 
-                                // clear button state
-                                disabled.set("false".into());
-                                state.set("".into());
+                                let quiz_next=quiz_list.get(next_num_index).unwrap();
+                                if data.correct_list.contains(&quiz_next.index){
+                                    disabled.set("true".into());
+                                    state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                                }else{
+                                    // clear state
+                                    disabled.set("false".into());
+                                    state.set("".into());
+                                }
                             },
                             "下一题"
                             }

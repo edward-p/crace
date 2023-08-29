@@ -1,12 +1,12 @@
 use gloo_storage::{LocalStorage, Storage};
 use linked_hash_set::LinkedHashSet;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Data {
     pub last_position: HashMap<String, usize>,
-    pub answer_map: HashMap<String, usize>,
+    pub correct_list: HashSet<String>,
     pub wrong_list: LinkedHashSet<String>,
 }
 
@@ -19,7 +19,7 @@ impl Default for Data {
         Self {
             last_position: last_position,
             wrong_list: LinkedHashSet::new(),
-            answer_map: HashMap::new(),
+            correct_list: HashSet::new(),
         }
     }
 }

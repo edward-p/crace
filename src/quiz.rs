@@ -2,6 +2,8 @@ use std::{error::Error, fmt::Display};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
+use crate::data::Data;
+
 #[derive(Debug)]
 pub enum QuizType {
     ClassA,
@@ -139,5 +141,18 @@ pub async fn load_quiz(quiz_type: QuizType) -> Result<Vec<Quiz>, Box<dyn Error>>
         }
     }
 
+    Ok(list)
+}
+
+
+pub async fn load_wrong_list() -> Result<Vec<Quiz>, Box<dyn Error>> {
+    let list_all = load_quiz(QuizType::All).await?;
+    let data = Data::get_from_storage();
+    
+    let list = list_all
+        .iter()
+        .filter(|q| return data.wrong_list.contains(&q.index))
+        .map(|q| q.clone())
+        .collect::<Vec<Quiz>>();
     Ok(list)
 }
