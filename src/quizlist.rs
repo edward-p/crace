@@ -54,7 +54,6 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     render!{
                         div{
                             img{
-                                style: "height: 20rem",
                                 src:"/resources/pictures/{quiz.picture}"
                             }
                         },
@@ -95,7 +94,30 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                 },
                 section{
                 div {
-                    style: "display: flex; bottom:0; gap: 1.5rem",
+                    style: "display: flex; flex-wrap: wrap; gap: 1.5rem",
+                    input{
+                        // style: "width: 65hw",
+                        placeholder:"输入题号",
+                        r#type: "number",
+                        min: "1",
+                        max: "{quiz_list.len()}",
+                        value: "{jump_to}",
+                        onchange: move |evt| {
+                            if let Ok(n) = evt.value.parse::<usize>(){
+                                let j;
+                                if n<1 {
+                                    j=1;
+                                }else if n>quiz_list.len(){
+                                    j=quiz_list.len();
+                                }else {
+                                    j=n;
+                                }
+                                jump_to.set(j);
+                            } else {
+                                jump_to.set(1);
+                            }
+                        },
+                    },
                     button {
                         onclick: move |_| {
                             let mut data = Data::get_from_storage();
@@ -115,29 +137,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                 state.set("".into());
                             }
                         },
-                        "跳转到"
-                    },
-                    input{
-                        placeholder:"输入题号",
-                        r#type: "number",
-                        min: "1",
-                        max: "{quiz_list.len()}",
-                        value: "{jump_to}",
-                        oninput: move |evt| {
-                            if let Ok(n) = evt.value.parse::<usize>(){
-                                let j;
-                                if n<1 {
-                                    j=1;
-                                }else if n>quiz_list.len(){
-                                    j=quiz_list.len();
-                                }else {
-                                    j=n;
-                                }
-                                jump_to.set(j);
-                            } else {
-                                jump_to.set(1);
-                            }
-                        },
+                        "跳转"
                     },
 
 
