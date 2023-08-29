@@ -25,39 +25,41 @@ enum Route {
 #[inline_props]
 fn NavBar(cx: Scope) -> Element {
     render! {
+        section{
             header{
                 nav {
-                        a { Link { to: Route::PracticeList {}, "顺序练习" } }
-                        a { Link { to: Route::WrongList {}, "错题列表" } }
+                    Link { to: Route::PracticeList {}, "顺序练习" },
+                    Link { to: Route::WrongList {}, "错题列表" },
+                    a { onclick: move|_|{
+
+                    },
+                    "清除练习记录"
+                    }
                 }
             }
-
+        }
+        section{
         Outlet::<Route> {}
+        }
     }
 }
 
 #[inline_props]
 fn PracticeList(cx: Scope) -> Element {
     render! {
-        nav {
-            ul {
-                li {
-                    Link {
-                        to: Route::QuizList { name: "A".into()},
-                        "A类考试"
-                    }
-                }
-                li {
-                    Link {
-                        to: Route::QuizList { name: "B".into()},
-                        "B类考试"
-                    }
-                }
-                li {
-                    Link {
-                        to: Route::QuizList { name: "C".into()},
-                        "C类考试"
-                    }
+        header {
+            nav {
+                Link {
+                    to: Route::QuizList { name: "A".into()},
+                    "A类考试"
+                },
+                Link {
+                    to: Route::QuizList { name: "B".into()},
+                    "B类考试"
+                },
+                Link {
+                    to: Route::QuizList { name: "C".into()},
+                    "C类考试"
                 }
             }
         }

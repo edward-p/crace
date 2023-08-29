@@ -19,3 +19,6 @@ serde = { version = "1.0.188", features = ["derive"] }
 # linked-hash-map = "0.5.6"
 getrandom = { version = "0.2.10", features = ["js"] }
 rand = { version = "0.8.5" }
+
+[profile.release]
+lto = true
