@@ -223,6 +223,7 @@ dependencies = [
  "reqwest",
  "serde",
  "wasm-logger",
+ "web-sys",
 ]
 
 [[package]]

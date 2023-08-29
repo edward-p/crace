@@ -108,7 +108,8 @@ impl Default for Quiz {
 pub async fn load_quiz(quiz_type: QuizType) -> Result<Vec<Quiz>, Box<dyn Error>> {
     let mut list = Vec::new();
 
-    let url = format!("{}/resources/{}", "http://localhost:8080/", quiz_type);
+    let baseurl = web_sys::window().unwrap().origin();
+    let url = format!("{}/resources/{}", baseurl, quiz_type);
     let text = reqwest::get(url).await?.text().await?;
     let mut q = Quiz::default();
     for li in text.lines() {

@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 log = "0.4"
 wasm-logger = "0.2"
+web-sys = "0.3.64"
 reqwest = { version = "0.11" }
 dioxus = "0.4.0"
 dioxus-router = "0.4.1"
