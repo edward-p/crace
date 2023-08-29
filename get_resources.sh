@@ -17,10 +17,10 @@ if [ -d "$current_dir/public/resources" ]; then
 fi
 
 mkdir -p "$current_dir/public/resources";
-iconv --from-code GB18030 "A类题库(${VERSION}).txt" > "$current_dir/public/resources/class_a.txt"
-iconv --from-code GB18030 "B类题库(${VERSION}).txt" > "$current_dir/public/resources/class_b.txt"
-iconv --from-code GB18030 "C类题库(${VERSION}).txt" > "$current_dir/public/resources/class_c.txt"
-iconv --from-code GB18030 "总题库(${VERSION}).txt" > "$current_dir/public/resources/class_all.txt"
+iconv --from-code GB18030 "A类题库(${VERSION}).txt" | sed 's/\r$//' > "$current_dir/public/resources/class_a.txt"
+iconv --from-code GB18030 "B类题库(${VERSION}).txt" | sed 's/\r$//' > "$current_dir/public/resources/class_b.txt"
+iconv --from-code GB18030 "C类题库(${VERSION}).txt" | sed 's/\r$//' > "$current_dir/public/resources/class_c.txt"
+iconv --from-code GB18030 "总题库(${VERSION}).txt" | sed 's/\r$//' > "$current_dir/public/resources/class_all.txt"
 
 mkdir -p "$current_dir/public/resources/pictures";
 rsync -a "总题库附图(${VERSION})/" "$current_dir/public/resources/pictures/"
