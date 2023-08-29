@@ -1,6 +1,5 @@
 use std::{error::Error, fmt::Display};
 
-use linked_hash_map::LinkedHashMap;
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[derive(Debug)]
@@ -85,12 +84,12 @@ pub struct Quiz {
 }
 
 impl Quiz {
-    pub fn update(&mut self, value: Self){
-        self.index=value.index;
-        self.question=value.question;
-        self.picture=value.picture;
-        self.choice=value.choice;
-        self.answer=value.answer;
+    pub fn update(&mut self, value: Self) {
+        self.index = value.index;
+        self.question = value.question;
+        self.picture = value.picture;
+        self.choice = value.choice;
+        self.answer = value.answer;
     }
 }
 
@@ -106,8 +105,8 @@ impl Default for Quiz {
     }
 }
 
-pub async fn load_quiz(quiz_type: QuizType) -> Result<LinkedHashMap<String, Quiz>, Box<dyn Error>> {
-    let mut map = LinkedHashMap::new();
+pub async fn load_quiz(quiz_type: QuizType) -> Result<Vec<Quiz>, Box<dyn Error>> {
+    let mut list = Vec::new();
 
     let url = format!("{}/resources/{}", "http://localhost:8080/", quiz_type);
     let text = reqwest::get(url).await?.text().await?;
@@ -132,12 +131,12 @@ pub async fn load_quiz(quiz_type: QuizType) -> Result<LinkedHashMap<String, Quiz
             }
             "[P]" => {
                 q.picture = (&line[3..]).into();
-                map.insert(q.index.clone(), q);
+                list.push(q.clone());
                 q = Quiz::default();
             }
             _ => continue,
         }
     }
 
-    Ok(map)
+    Ok(list)
 }

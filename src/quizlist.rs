@@ -1,63 +1,73 @@
 #![allow(non_snake_case)]
 use crate::{
     data::Data,
-    quiz::{self, load_quiz, Choice, QuizType, Quiz},
+    quiz::{load_quiz, QuizType, Choice},
 };
 use dioxus::prelude::*;
 
 #[inline_props]
 pub fn QuizList(cx: Scope, name: String) -> Element {
     let quiz_data = use_future(cx, (), |_| load_quiz(QuizType::from(name)));
-    let quiz=use_ref(cx, ||Quiz::default());
+
     // check if the future is resolved
     match quiz_data.value() {
-        Some(Ok(quiz_data)) => {
-            let mut data = Data::get_from_storage();
+        Some(Ok(quiz_list)) => {
+            let data = Data::get_from_storage();
             let mut num_index = data.last_position.get(name).unwrap().clone();
-            let mut iter = quiz_data.values().skip(num_index);
-            quiz.set(iter.next().unwrap().clone());
+            let quiz = use_ref(cx, || quiz_list.get(num_index).unwrap().clone());
+            let q = quiz.read();
             render! {
-                h4 { "{name}类考试"},
+                h4 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 b{
-                    "{num_index+1}. {quiz.read().index} {quiz.read().question}"
+                    "{num_index+1}. {q.index} {q.question}"
                 },
-                ul{
+                if !q.picture.is_empty() {
+                    render!{
+                        div{
+                            img{
+                                src:"/resources/{q.picture}"
+                            }
+                        },
+                    }
+                }
+                div{
                     for i in 0..4 {
-                        li{
-                            "{Choice::from(i)}. {quiz.read().choice.get(i).unwrap()}"
+                        div{
+                            button{
+                                style: "background: var(--accent-light); color: var(--text)",
+                                "{Choice::from(i)}. {q.choice.get(i).unwrap()}"
+                            }
                         }
                     }
 
                 },
-                if !quiz.read().picture.is_empty() {
-                    render!{
-                        div{
-                            img{
-                                src:"/resources/{quiz.read().picture}"
-                            }
+                div {
+                    if num_index > 0{
+                        render!{
+                            button {
+                                onclick: move |_| {
+                                    let mut data = Data::get_from_storage();
+                                    num_index = num_index-1;
+                                    data.last_position.insert(name.clone(), num_index);
+                                    quiz.set(quiz_list.get(num_index).unwrap().clone());
+                                    data.save();
+                                },
+                                "上一题"
+                            },
                         }
                     }
-                }
-                if num_index>1{
-                    render!{
-                        button {
-                            "上一题"
-                        },
-                    }
-                }
-                b{
-                    "{num_index+1}/{quiz_data.len()}"
-                }
-                if num_index<quiz_data.len()-1 {
-                    render!{
-                        button {
-                         onclick: move |_| {
-                            num_index=num_index+1;
-                            data.last_position.insert(name.clone(), num_index);
-                            data.save();
-                            quiz.set(iter.next().unwrap().clone());
-                         },
-                         "下一题"
+                    if num_index < quiz_list.len() - 1 {
+                        render!{
+                            button {
+                            onclick: move |_| {
+                                let mut data = Data::get_from_storage();
+                                num_index = num_index+1;
+                                data.last_position.insert(name.clone(), num_index);
+                                quiz.set(quiz_list.get(num_index).unwrap().clone());
+                                data.save();
+                            },
+                            "下一题"
+                            }
                         }
                     }
                 }

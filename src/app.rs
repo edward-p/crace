@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::{quiz::Quiz, quizlist::QuizList, wronglist::WrongList};
+use crate::{quizlist::QuizList, wronglist::WrongList};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -9,13 +9,15 @@ use dioxus_router::prelude::*;
 enum Route {
     #[layout(NavBar)]
         #[route("/")]
-            #[layout(ExamClass)]
-                #[route("/")]
-                ExamClass {},
+        Home{},
+        #[nest("/practice")]
+            #[layout(Practice)]
+              #[route("/")]
+              PracticeList {},
+              #[route("/quiz_list/:name")]
+              QuizList { name: String },
             #[end_layout]
-        #[end_nest]
-        #[route("/:name")]
-        QuizList { name: String },
+          #[end_nest]
         #[route("/wronglist")]
         WrongList {},
     #[end_layout]
@@ -26,39 +28,58 @@ enum Route {
 }
 // ANCHOR_END: router
 
+
+#[inline_props]
+fn Home(cx: Scope) -> Element {
+    render! {
+        h1 { "Home" }
+    }
+}
+
 #[inline_props]
 fn NavBar(cx: Scope) -> Element {
     render! {
         nav {
-            div {
-                a { Link { to: Route::ExamClass {}, "顺序练习" } }
-                a { Link { to: Route::WrongList {}, "错题列表" } }
+            ul {
+                li { Link { to: Route::PracticeList {}, "顺序练习" } }
+                // li { Link { to: Route::WrongList {}, "错题列表" } }
             }
         }
         Outlet::<Route> {}
     }
 }
 
+
 #[inline_props]
-fn ExamClass(cx: Scope) -> Element {
+fn Practice(cx: Scope) -> Element {
+    render! {
+        h4 { "顺序练习" }
+        Outlet::<Route> {}
+    }
+}
+
+#[inline_props]
+fn PracticeList(cx: Scope) -> Element {
     render! {
         nav {
-            a {
-                Link {
-                    to: Route::QuizList { name: "A".into()},
-                    "A类考试"
+            ul {
+                li {
+                    Link {
+                        to: Route::QuizList { name: "A".into()},
+                        "A类考试"
+                    }
                 }
-            }
-            a {
-                Link {
-                    to: Route::QuizList { name: "B".into()},
-                    "B类考试"
+                li {
+                    Link {
+                        to: Route::QuizList { name: "B".into()},
+                        "B类考试"
+                    }
                 }
-            }
-            a {
-                Link {
-                    to: Route::QuizList { name: "C".into()},
-                    "C类考试"
+                li {
+                    Link {
+                        to: Route::QuizList { name: "C".into()},
+                        "C类考试"
+                    }
                 }
             }
         }
