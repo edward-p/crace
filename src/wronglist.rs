@@ -38,6 +38,7 @@ pub fn WrongList(cx: Scope) -> Element {
                 h4 { "错题列表 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
+                        style: " font-size: 0.9rem",
                         "{quiz.index}. {quiz.question}"
                     },
                     if !state.is_empty() {

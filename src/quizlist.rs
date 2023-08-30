@@ -40,6 +40,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                 h4 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
+                        style: " font-size: 0.9rem",
                         "{quiz.index}. {quiz.question}"
                     },
                     if !state.is_empty() {
