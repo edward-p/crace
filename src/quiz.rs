@@ -151,8 +151,8 @@ pub async fn load_wrong_list() -> Result<Vec<Quiz>, Box<dyn Error>> {
     
     let list = list_all
         .iter()
-        .filter(|q| return data.wrong_list.contains(&q.index))
-        .map(|q| q.clone())
+        .filter(|q| data.wrong_list.contains(&q.index))
+        .cloned()
         .collect::<Vec<Quiz>>();
     Ok(list)
 }

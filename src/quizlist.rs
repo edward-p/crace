@@ -13,12 +13,12 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
         Some(Ok(quiz_list)) => {
             let data = Data::get_from_storage();
 
-            let num_index = use_state(cx, || data.last_position.get(name).unwrap().clone());
-            let quiz_next = quiz_list.get(num_index.get().clone()).unwrap().clone();
+            let num_index = use_state(cx, || *data.last_position.get(name).unwrap());
+            let quiz_next = quiz_list.get(*num_index.get()).unwrap().clone();
 
             let state = use_state(cx, || {
                 if data.correct_list.contains(&quiz_next.index){
-                    format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string())
+                    format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer)
                 }else{
                     "".into()
                 }
@@ -74,7 +74,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                         data.save();
                                         // add wrong indicator
                                         disabled.set("true".into());
-                                        state.set(format!("❌ 回答：{}, 正确答案：{}", Choice::from(i).to_string(), quiz.answer.to_string()));
+                                        state.set(format!("❌ 回答：{}, 正确答案：{}", Choice::from(i), quiz.answer));
                                     } else {
                                         log::info!("Correct!");
                                         let mut data = Data::get_from_storage();
@@ -82,7 +82,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                         data.save();
                                         // clear state
                                         disabled.set("true".into());
-                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", Choice::from(i).to_string(), quiz.answer.to_string()));
+                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", Choice::from(i), quiz.answer));
                                     }
                                 },
                                 disabled:"{disabled}",
@@ -131,7 +131,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                             let quiz_next=quiz_list.get(next_num_index).unwrap();
                             if data.correct_list.contains(&quiz_next.index){
                                 disabled.set("true".into());
-                                state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                                state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
                             }else{
                                 // clear state
                                 disabled.set("false".into());
@@ -156,7 +156,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                     let quiz_next=quiz_list.get(next_num_index).unwrap();
                                     if data.correct_list.contains(&quiz_next.index){
                                         disabled.set("true".into());
-                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
                                     }else{
                                         // clear state
                                         disabled.set("false".into());
@@ -182,7 +182,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                 let quiz_next=quiz_list.get(next_num_index).unwrap();
                                 if data.correct_list.contains(&quiz_next.index){
                                     disabled.set("true".into());
-                                    state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer.to_string(), quiz_next.answer.to_string()));
+                                    state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
                                 }else{
                                     // clear state
                                     disabled.set("false".into());

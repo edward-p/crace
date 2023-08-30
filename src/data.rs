@@ -17,7 +17,7 @@ impl Default for Data {
         last_position.insert("B".into(), 0);
         last_position.insert("C".into(), 0);
         Self {
-            last_position: last_position,
+            last_position,
             wrong_list: LinkedHashSet::new(),
             correct_list: HashSet::new(),
         }
@@ -28,11 +28,11 @@ impl Data {
     pub fn get_from_storage() -> Self {
         let data = LocalStorage::get::<Data>("data");
         if let Ok(d) = data {
-            return d;
+            d
         } else {
             let d = Data::default();
             let _ = LocalStorage::set("data", &d);
-            return d;
+            d
         }
     }
     pub fn save(&self){
