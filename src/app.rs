@@ -28,6 +28,7 @@ enum Route {
 fn NavBar(cx: Scope) -> Element {
     render! {
         section{
+            style:"position: fixed; top:0",
             header{
                 nav {
                     Link { to: Route::PracticeList {}, "顺序练习" },
@@ -37,6 +38,7 @@ fn NavBar(cx: Scope) -> Element {
             }
         }
         section{
+        style:"position: fixed; top: 5rem",
         Outlet::<Route> {}
         }
     }
@@ -45,6 +47,8 @@ fn NavBar(cx: Scope) -> Element {
 #[inline_props]
 fn PracticeList(cx: Scope) -> Element {
     render! {
+        div{
+            style:"margin-top: 1.12rem",
         header {
             nav {
                 Link {
@@ -60,6 +64,7 @@ fn PracticeList(cx: Scope) -> Element {
                     "C类考试"
                 }
             }
+        }
         }
     }
 }

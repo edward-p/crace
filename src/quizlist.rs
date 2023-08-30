@@ -37,32 +37,35 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
             let quiz = use_state(cx, || quiz_next);
 
             render! {
-                h4 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
+                div{
+                style: "max-height: 26rem; overflow: scroll",
+                h5 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
-                        style: " font-size: 0.9rem",
+                        style: " font-size: 0.9rem;",
                         "{quiz.index}. {quiz.question}"
                     },
-                    if !state.is_empty() {
-                        render!{
-                            blockquote {
-                                style: " font-size: 0.9rem",
-                                "{state}"
-                            }
-                        }
-                    }
                 },
                 if !quiz.picture.is_empty() {
                     render!{
                         div{
                             img{
+                                style: "width: 80%; height: auto",
                                 src:"/resources/pictures/{quiz.picture}"
                             }
                         },
                     }
                 }
+                if !state.is_empty() {
+                    render!{
+                        blockquote {
+                            style: " font-size: 0.9rem",
+                            "{state}"
+                        }
+                    }
+                }
                 div{
-                    style: "display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.5rem",
+                    style: "gap: 1.12rem; margin-top: 1.5rem",
                     for i in 0..4 {
                         div {
                             button{
@@ -87,14 +90,16 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                     }
                                 },
                                 disabled:"{disabled}",
-                                style: "background: var(--accent-light); color: var(--text); text-align: left; font-size: 0.9rem",
+                                style: "background: var(--bg); color: var(--text); text-align: left; font-size: 0.9rem; width: 80%",
                                 "{Choice::from(i)}. {quiz.choice[i]}"
                             }
                         }
                     }
 
-                },
+                }
+            }
                 section{
+                style:"position: fixed; bottom:0",
                 div {
                     style: "display: flex; flex-wrap: wrap; gap: 1.5rem",
                     input{
@@ -198,7 +203,8 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                 }
 
             }
-            }
+            
+        }
         }
         Some(Err(err)) => {
             // if there was an error, render the error
