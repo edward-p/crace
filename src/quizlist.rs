@@ -45,6 +45,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     if !state.is_empty() {
                         render!{
                             blockquote {
+                                style: " font-size: 0.9rem",
                                 "{state}"
                             }
                         }
@@ -60,7 +61,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     }
                 }
                 div{
-                    style: "display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem",
+                    style: "display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.5rem",
                     for i in 0..4 {
                         div {
                             button{
@@ -85,7 +86,7 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                     }
                                 },
                                 disabled:"{disabled}",
-                                style: "background: var(--accent-light); color: var(--text); text-align: left;",
+                                style: "background: var(--accent-light); color: var(--text); text-align: left; font-size: 0.9rem",
                                 "{Choice::from(i)}. {quiz.choice[i]}"
                             }
                         }
