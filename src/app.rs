@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::{quizlist::QuizList, wronglist::WrongList, data::Data};
+use crate::{data::Data, quizlist::QuizList, wronglist::WrongList};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -81,9 +81,17 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
 
 #[inline_props]
 fn ClearStorage(cx: Scope) -> Element {
-    Data::clear();
+    let state = use_state(cx, || "确定清除？".to_string());
     render! {
-        h2 { "已清除练习记录!" }
+        h4 { "{state}" }
+
+        button{
+            onclick: move |_| {
+                Data::clear();
+                state.set("已清除练习记录！".into());
+            },
+            "确定"
+        }
     }
 }
 

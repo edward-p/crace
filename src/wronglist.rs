@@ -15,7 +15,7 @@ pub fn WrongList(cx: Scope) -> Element {
         Some(Ok(quiz_list)) => {
             if quiz_list.is_empty() {
                 return render! {
-                    h2{
+                    h4{
                         "暂无错题..."
                     }
                 };
