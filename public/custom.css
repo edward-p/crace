@@ -15,7 +15,7 @@
 .quiz-content {
   min-width: 60vw;
   max-width: 90vw;
-  height: 40rem;
+  height: 36rem;
   overflow: scroll;
 }
 
@@ -50,7 +50,7 @@
 
 .quiz-bottom {
   position: fixed;
-  bottom: 0;
+  bottom: 2rem;
   display: flex;
   flex-wrap: wrap;
   gap: 1.2rem;
@@ -58,5 +58,5 @@
 }
 
 .quiz-bottom input {
-  max-width: 5rem;
+  max-width: 6rem;
 }
