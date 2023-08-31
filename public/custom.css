@@ -1,0 +1,62 @@
+.top-bar {
+  position: fixed;
+  top: 0;
+}
+
+.content {
+  position: fixed;
+  top: 4rem;
+}
+
+.exams {
+  margin-top: "1.15rem";
+}
+
+.quiz-content {
+  min-width: 60vw;
+  max-width: 90vw;
+  height: 40rem;
+  overflow: scroll;
+}
+
+.quiz-content b,
+.quiz-content p,
+.quiz-content button,
+.quiz-content blockquote {
+  font-size: 0.9rem;
+}
+
+.quiz-options button {
+  background: var(--bg);
+  color: var(--text);
+  text-align: left;
+  width: 90%;
+}
+
+.quiz-options button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.quiz-content img {
+  height: 12rem;
+  width: auto;
+}
+
+.quiz-options {
+  gap: 1.12rem;
+  margin-top: 1.5rem;
+}
+
+.quiz-bottom {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.quiz-bottom input {
+  max-width: 5rem;
+}

@@ -38,11 +38,10 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
 
             render! {
                 div{
-                style: "max-height: 26rem; overflow: scroll",
+                class: "quiz-content",
                 h5 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
-                        style: " font-size: 0.9rem;",
                         "{quiz.index}. {quiz.question}"
                     },
                 },
@@ -50,7 +49,6 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                     render!{
                         div{
                             img{
-                                style: "width: 80%; height: auto",
                                 src:"/resources/pictures/{quiz.picture}"
                             }
                         },
@@ -59,13 +57,12 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                 if !state.is_empty() {
                     render!{
                         blockquote {
-                            style: " font-size: 0.9rem",
                             "{state}"
                         }
                     }
                 }
                 div{
-                    style: "gap: 1.12rem; margin-top: 1.5rem",
+                    class: "quiz-options",
                     for i in 0..4 {
                         div {
                             button{
@@ -90,7 +87,6 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
                                     }
                                 },
                                 disabled:"{disabled}",
-                                style: "background: var(--bg); color: var(--text); text-align: left; font-size: 0.9rem; width: 80%",
                                 "{Choice::from(i)}. {quiz.choice[i]}"
                             }
                         }
@@ -98,109 +94,98 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
 
                 }
             }
-                section{
-                style:"position: fixed; bottom:0",
-                div {
-                    style: "display: flex; flex-wrap: wrap; gap: 1.5rem",
-                    input{
-                        // style: "width: 65hw",
-                        placeholder:"输入题号",
-                        r#type: "number",
-                        min: "1",
-                        max: "{quiz_list.len()}",
-                        value: "{jump_to}",
-                        onchange: move |evt| {
-                            if let Ok(n) = evt.value.parse::<usize>(){
-                                let j;
-                                if n<1 {
-                                    j=1;
-                                }else if n>quiz_list.len(){
-                                    j=quiz_list.len();
-                                }else {
-                                    j=n;
-                                }
-                                jump_to.set(j);
-                            } else {
-                                jump_to.set(1);
+            div {
+                class: "quiz-bottom",
+                input{
+                    placeholder:"输入题号",
+                    r#type: "number",
+                    min: "1",
+                    max: "{quiz_list.len()}",
+                    value: "{jump_to}",
+                    onchange: move |evt| {
+                        if let Ok(n) = evt.value.parse::<usize>(){
+                            let j;
+                            if n<1 {
+                                j=1;
+                            }else if n>quiz_list.len(){
+                                j=quiz_list.len();
+                            }else {
+                                j=n;
                             }
-                        },
-                    },
-                    button {
-                        onclick: move |_| {
-                            let mut data = Data::get_from_storage();
-                            let next_num_index = jump_to - 1;
-                            num_index.set(next_num_index);
-                            data.last_position.insert(name.clone(), next_num_index);
-                            quiz.set(quiz_list.get(next_num_index).unwrap().clone());
-                            data.save();
-    
-                            let quiz_next=quiz_list.get(next_num_index).unwrap();
-                            if data.correct_list.contains(&quiz_next.index){
-                                disabled.set("true".into());
-                                state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
-                            }else{
-                                // clear state
-                                disabled.set("false".into());
-                                state.set("".into());
-                            }
-                        },
-                        "跳转"
-                    },
-
-
-                    if *num_index.get() > 0{
-                        render!{
-                            button {
-                                onclick: move |_| {
-                                    let mut data = Data::get_from_storage();
-                                    let next_num_index = num_index-1;
-                                    num_index.set(next_num_index);
-                                    data.last_position.insert(name.clone(), next_num_index);
-                                    quiz.set(quiz_list.get(next_num_index).unwrap().clone());
-                                    data.save();
-
-                                    let quiz_next=quiz_list.get(next_num_index).unwrap();
-                                    if data.correct_list.contains(&quiz_next.index){
-                                        disabled.set("true".into());
-                                        state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
-                                    }else{
-                                        // clear state
-                                        disabled.set("false".into());
-                                        state.set("".into());
-                                    }
-                                },
-                                "上一题"
-                            },
+                            jump_to.set(j);
+                        } else {
+                            jump_to.set(1);
                         }
-                    }
-                    if *num_index.get() < quiz_list.len() - 1 {
-                        render!{
-                            button {
-                            onclick: move |_| {
-                                let mut data = Data::get_from_storage();
-                                let next_num_index = num_index+1;
-                                num_index.set(next_num_index);
-                                data.last_position.insert(name.clone(), next_num_index);
-                                let quiz_next=quiz_list.get(next_num_index).unwrap().clone();
-                                quiz.set(quiz_next);
-                                data.save();
+                    },
+                },
+                button {
+                    onclick: move |_| {
+                        let mut data = Data::get_from_storage();
+                        let next_num_index = jump_to - 1;
+                        num_index.set(next_num_index);
+                        data.last_position.insert(name.clone(), next_num_index);
+                        quiz.set(quiz_list.get(next_num_index).unwrap().clone());
+                        data.save();
 
-                                let quiz_next=quiz_list.get(next_num_index).unwrap();
-                                if data.correct_list.contains(&quiz_next.index){
-                                    disabled.set("true".into());
-                                    state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
-                                }else{
-                                    // clear state
-                                    disabled.set("false".into());
-                                    state.set("".into());
-                                }
-                            },
-                            "下一题"
-                            }
+                        let quiz_next=quiz_list.get(next_num_index).unwrap();
+                        if data.correct_list.contains(&quiz_next.index){
+                            disabled.set("true".into());
+                            state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
+                        }else{
+                            // clear state
+                            disabled.set("false".into());
+                            state.set("".into());
                         }
-                    }
+                    },
+                    "跳转"
+                },
 
-                }
+                button {
+                    disabled: "{*num_index.get() <= 0}",
+                    onclick: move |_| {
+                        let mut data = Data::get_from_storage();
+                        let next_num_index = num_index-1;
+                        num_index.set(next_num_index);
+                        data.last_position.insert(name.clone(), next_num_index);
+                        quiz.set(quiz_list.get(next_num_index).unwrap().clone());
+                        data.save();
+
+                        let quiz_next=quiz_list.get(next_num_index).unwrap();
+                        if data.correct_list.contains(&quiz_next.index){
+                            disabled.set("true".into());
+                            state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
+                        }else{
+                            // clear state
+                            disabled.set("false".into());
+                            state.set("".into());
+                        }
+                    },
+                    "上一题"
+                },
+
+                button {
+                    disabled: "{*num_index.get() >= quiz_list.len() - 1}",
+                    onclick: move |_| {
+                        let mut data = Data::get_from_storage();
+                        let next_num_index = num_index+1;
+                        num_index.set(next_num_index);
+                        data.last_position.insert(name.clone(), next_num_index);
+                        let quiz_next=quiz_list.get(next_num_index).unwrap().clone();
+                        quiz.set(quiz_next);
+                        data.save();
+
+                        let quiz_next=quiz_list.get(next_num_index).unwrap();
+                        if data.correct_list.contains(&quiz_next.index){
+                            disabled.set("true".into());
+                            state.set(format!("✔️ 回答：{}, 正确答案：{}", quiz_next.answer, quiz_next.answer));
+                        }else{
+                            // clear state
+                            disabled.set("false".into());
+                            state.set("".into());
+                        }
+                    },
+                    "下一题"
+                    }
 
             }
             

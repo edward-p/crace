@@ -27,19 +27,17 @@ enum Route {
 #[inline_props]
 fn NavBar(cx: Scope) -> Element {
     render! {
-        section{
-            style:"position: fixed; top:0",
-            header{
-                nav {
-                    Link { to: Route::PracticeList {}, "顺序练习" },
-                    Link { to: Route::WrongList {}, "错题列表" },
-                    Link { to: Route::ClearStorage {}, "清除练习记录" },
-                }
+        header{
+            class: "top-bar",
+            nav {
+                Link { to: Route::PracticeList {}, "顺序练习" },
+                Link { to: Route::WrongList {}, "错题列表" },
+                Link { to: Route::ClearStorage {}, "清除练习记录" },
             }
         }
-        section{
-        style:"position: fixed; top: 5rem",
-        Outlet::<Route> {}
+        div{
+            class: "content",
+            Outlet::<Route> {}
         }
     }
 }
@@ -48,23 +46,23 @@ fn NavBar(cx: Scope) -> Element {
 fn PracticeList(cx: Scope) -> Element {
     render! {
         div{
-            style:"margin-top: 1.12rem",
-        header {
-            nav {
-                Link {
-                    to: Route::QuizList { name: "A".into()},
-                    "A类考试"
-                },
-                Link {
-                    to: Route::QuizList { name: "B".into()},
-                    "B类考试"
-                },
-                Link {
-                    to: Route::QuizList { name: "C".into()},
-                    "C类考试"
+            class: "exams",
+            header {
+                nav {
+                    Link {
+                        to: Route::QuizList { name: "A".into()},
+                        "A类考试"
+                    },
+                    Link {
+                        to: Route::QuizList { name: "B".into()},
+                        "B类考试"
+                    },
+                    Link {
+                        to: Route::QuizList { name: "C".into()},
+                        "C类考试"
+                    }
                 }
             }
-        }
         }
     }
 }

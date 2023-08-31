@@ -33,7 +33,7 @@ index_on_404 = true
 [web.resource]
 
 # CSS style file
-style = ["https://cdn.simplecss.org/simple.min.css"]
+style = ["https://cdn.simplecss.org/simple.min.css", "/custom.css"]
 
 # Javascript code file
 script = []
