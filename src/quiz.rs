@@ -67,7 +67,7 @@ impl From<usize> for Choice {
 
 impl Distribution<Choice> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Choice {
-        match rng.gen_range(0..=4) {
+        match rng.gen_range(0..=3) {
             0 => Choice::A,
             1 => Choice::B,
             2 => Choice::C,
