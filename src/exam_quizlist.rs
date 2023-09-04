@@ -7,7 +7,8 @@ use dioxus::prelude::*;
 
 #[inline_props]
 pub fn ExamQuizList(cx: Scope, name: String) -> Element {
-    let quiz_data = use_future(cx, (), |_| load_exam(QuizType::from(name)));
+    let quiz_type=QuizType::from(name);
+    let quiz_data = use_future(cx, (), |_| load_exam(quiz_type));
     // check if the future is resolved
     match quiz_data.value() {
         Some(Ok(quiz_list)) => {
@@ -33,7 +34,7 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
                         h5 { "{name}类模拟考试 {num_index+1}/{quiz_list.len()}" },
 
                         if *submitted.get(){
-                            if *score_s.get() >= 25 {
+                            if *score_s.get() >= quiz_type.get_pass_score() {
                                 render!(h5{style: "color: red", "通过, 得分: {score_s}"})
                             }else {
                                 render!(h5{style: "color: red", "未通过, 得分: {score_s}"})
@@ -48,7 +49,7 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
             
                                         for (i,quiz) in quiz_list.iter().enumerate(){
                                             if *answer_s.read().get(i).unwrap() == Some(quiz.answer){
-                                                score += 2;
+                                                score += 1;
                                             }else {
                                                 data.wrong_list.insert(quiz.index.clone());
                                             }

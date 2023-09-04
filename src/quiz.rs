@@ -4,7 +4,7 @@ use rand::{distributions::Standard, prelude::Distribution, Rng, seq::SliceRandom
 
 use crate::data::Data;
 
-#[derive(Debug)]
+#[derive(Debug,Clone, Copy)]
 pub enum QuizType {
     ClassA,
     ClassB,
@@ -30,6 +30,17 @@ impl Display for QuizType {
             Self::ClassB => write!(f, "class_b.txt"),
             Self::ClassC => write!(f, "class_c.txt"),
             Self::All => write!(f, "class_all.txt"),
+        }
+    }
+}
+
+impl QuizType {
+    pub fn get_pass_score(&self)->i32{
+        match self{
+            QuizType::ClassA=>25,
+            QuizType::ClassB=>40,
+            QuizType::ClassC=>60,
+            QuizType::All=>todo!()
         }
     }
 }
@@ -160,5 +171,11 @@ pub async fn load_wrong_list() -> Result<Vec<Quiz>, Box<dyn Error>> {
 pub async fn load_exam(quiz_type: QuizType) -> Result<Vec<Quiz>, Box<dyn Error>> {
     let mut list = load_quiz(quiz_type).await?;
     list.shuffle(&mut thread_rng());
-    Ok(list[..30].into())
+    match quiz_type {
+        QuizType::ClassA=>Ok(list[..30].into()),
+        QuizType::ClassB=>Ok(list[..50].into()),
+        QuizType::ClassC=>Ok(list[..80].into()),
+        QuizType::All => todo!(),
+    }
+    
 }
