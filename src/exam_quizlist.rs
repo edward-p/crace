@@ -35,7 +35,7 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
 
                         if *submitted.get(){
                             if *score_s.get() >= quiz_type.get_pass_score() {
-                                render!(h5{style: "color: red", "通过, 得分: {score_s}"})
+                                render!(h5{style: "color: green", "通过, 得分: {score_s}"})
                             }else {
                                 render!(h5{style: "color: red", "未通过, 得分: {score_s}"})
                             }
