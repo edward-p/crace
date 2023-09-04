@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::{data::Data, quizlist::QuizList, wronglist::WrongList};
+use crate::{data::Data, exam_quizlist::ExamQuizList, quizlist::QuizList, wronglist::WrongList};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -12,6 +12,10 @@ enum Route {
         PracticeList {},
         #[route("/practice/:name")]
         QuizList { name: String },
+        #[route("/exam")]
+        ExamList{},
+        #[route("/exam/:name")]
+        ExamQuizList { name: String },
         #[route("/wronglist")]
         WrongList {},
         #[route("/clear")]
@@ -31,8 +35,9 @@ fn NavBar(cx: Scope) -> Element {
             class: "top-bar",
             nav {
                 Link { to: Route::PracticeList {}, "顺序练习" },
+                Link { to: Route::ExamList {}, "模拟考试" },
                 Link { to: Route::WrongList {}, "错题列表" },
-                Link { to: Route::ClearStorage {}, "清除练习记录" },
+                Link { to: Route::ClearStorage {}, "清除记录" },
             }
         }
         div{
@@ -47,6 +52,7 @@ fn PracticeList(cx: Scope) -> Element {
     render! {
         div{
             class: "exams",
+            h4 {"顺序练习"},
             header {
                 nav {
                     Link {
@@ -59,6 +65,32 @@ fn PracticeList(cx: Scope) -> Element {
                     },
                     Link {
                         to: Route::QuizList { name: "C".into()},
+                        "C类考试"
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[inline_props]
+fn ExamList(cx: Scope) -> Element {
+    render! {
+        div{
+            class: "exams",
+            h4 {"模拟考试"},
+            header {
+                nav {
+                    Link {
+                        to: Route::ExamQuizList { name: "A".into()},
+                        "A类考试"
+                    },
+                    Link {
+                        to: Route::ExamQuizList { name: "B".into()},
+                        "B类考试"
+                    },
+                    Link {
+                        to: Route::ExamQuizList { name: "C".into()},
                         "C类考试"
                     }
                 }

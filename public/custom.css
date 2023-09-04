@@ -5,6 +5,8 @@
 
 .content {
   position: fixed;
+  width: 90vw;
+  margin-right: 10vw;
   top: 4rem;
 }
 
@@ -13,9 +15,9 @@
 }
 
 .quiz-content {
-  min-width: 60vw;
-  max-width: 90vw;
   height: 36rem;
+  width: 100%;
+  margin-right: 10vw;
   overflow: scroll;
 }
 
@@ -33,7 +35,7 @@
   width: 90%;
 }
 
-.quiz-options button:hover {
+.quiz-options button:hover:enabled {
   background: var(--accent);
   color: var(--bg);
 }
@@ -59,4 +61,15 @@
 
 .quiz-bottom input {
   max-width: 6rem;
+}
+
+.exam-head {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10vw;
+}
+
+.exam-head button{
+  height: max-content;
+  align-self: center;
 }

@@ -1,6 +1,6 @@
 use std::{error::Error, fmt::Display};
 
-use rand::{distributions::Standard, prelude::Distribution, Rng};
+use rand::{distributions::Standard, prelude::Distribution, Rng, seq::SliceRandom, thread_rng};
 
 use crate::data::Data;
 
@@ -155,4 +155,10 @@ pub async fn load_wrong_list() -> Result<Vec<Quiz>, Box<dyn Error>> {
         .cloned()
         .collect::<Vec<Quiz>>();
     Ok(list)
+}
+
+pub async fn load_exam(quiz_type: QuizType) -> Result<Vec<Quiz>, Box<dyn Error>> {
+    let mut list = load_quiz(quiz_type).await?;
+    list.shuffle(&mut thread_rng());
+    Ok(list[..30].into())
 }
