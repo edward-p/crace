@@ -1,3 +1,8 @@
+#main{
+  grid-column: 2;
+  width: min(45rem,90%);
+}
+
 .top-bar {
   position: fixed;
   top: 0;
@@ -5,8 +10,7 @@
 
 .content {
   position: fixed;
-  width: 90vw;
-  margin-right: 10vw;
+  width: min(45rem,90%);
   top: 4rem;
 }
 
@@ -16,8 +20,6 @@
 
 .quiz-content {
   height: 36rem;
-  width: 100%;
-  margin-right: 10vw;
   overflow: scroll;
 }
 
@@ -32,7 +34,7 @@
   background: var(--bg);
   color: var(--text);
   text-align: left;
-  width: 90%;
+  width: 100%;
 }
 
 .quiz-options button:hover:enabled {
@@ -55,7 +57,7 @@
   bottom: 2rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 1.5rem;
   font-size: 0.9rem;
 }
 
@@ -66,10 +68,9 @@
 .exam-head {
   display: flex;
   justify-content: space-between;
-  margin-right: 10vw;
 }
 
-.exam-head button{
+.exam-head button {
   height: max-content;
   align-self: center;
 }
