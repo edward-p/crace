@@ -64,6 +64,11 @@ pub fn WrongList(cx: Scope) -> Element {
                     for i in 0..4 {
                         div {
                             button{
+                                style: if "" != state.get() && i==(quiz.answer as usize) {
+                                    "background: var(--accent); color: var(--bg);"
+                                }else {
+                                    ""
+                                },
                                 onclick: move |_| {
                                     if Choice::from(i) != quiz.answer  {
                                         log::info!("Wrong!");
