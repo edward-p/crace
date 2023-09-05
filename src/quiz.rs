@@ -43,6 +43,14 @@ impl QuizType {
             QuizType::All=>todo!()
         }
     }
+    pub fn get_amount(&self)->i32{
+        match self{
+            QuizType::ClassA=>30,
+            QuizType::ClassB=>50,
+            QuizType::ClassC=>80,
+            QuizType::All=>todo!()
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]

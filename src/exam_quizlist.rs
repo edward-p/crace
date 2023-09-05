@@ -20,7 +20,7 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
             let score_s = use_state(cx, || 0);
             let answer_s = use_ref(cx, || {
                 let mut a: Vec<Option<Choice>> = Vec::new();
-                for _ in 0..30 {
+                for _ in 0..quiz_type.get_amount() {
                     a.push(None);
                 }
                 a
@@ -81,7 +81,7 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
                         match *answer_s.read().get(*num_index.get()).unwrap() {
                             Some(ans) if ans == quiz.answer => render!(blockquote {"✔️ 回答：{ans}, 正确答案：{quiz.answer}"}),
                             Some(ans) => render!(blockquote {"❌ 回答：{ans}, 正确答案：{quiz.answer}"}),
-                            None=>  render!(blockquote {"❌ 回答：None, 正确答案：{quiz.answer}"}),
+                            None=>  render!(blockquote {"❌ 未答, 正确答案：{quiz.answer}"}),
                         }
                     }
                     div{
