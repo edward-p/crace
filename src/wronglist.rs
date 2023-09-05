@@ -35,9 +35,9 @@ pub fn WrongList(cx: Scope) -> Element {
             let quiz = use_state(cx, || quiz_next);
 
             render! {
+                h5 { "错题列表 {num_index+1}/{quiz_list.len()}" },
                 div{
                     class: "quiz-content",
-                h5 { "错题列表 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
                         "{quiz.index}. {quiz.question}"

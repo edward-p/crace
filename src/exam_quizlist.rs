@@ -27,42 +27,42 @@ pub fn ExamQuizList(cx: Scope, name: String) -> Element {
             });
 
             render! {
+                div{
+                    class: "exam-head",
+                    h5 { "{name}类模拟考试 {num_index+1}/{quiz_list.len()}" },
+                    
+                    if *submitted.get(){
+                        if *score_s.get() >= quiz_type.get_pass_score() {
+                            render!(h5{style: "color: green", "通过, 得分: {score_s}"})
+                        }else {
+                            render!(h5{style: "color: red", "未通过, 得分: {score_s}"})
+                        }
+                    }else {
+                        render!(
+                            button {
+                                disabled: "{*num_index.get() < quiz_list.len() - 1}",
+                                onclick: move |_| {
+                                    let mut data = Data::get_from_storage();
+                                    let mut score = 0;
+        
+                                    for (i,quiz) in quiz_list.iter().enumerate(){
+                                        if *answer_s.read().get(i).unwrap() == Some(quiz.answer){
+                                            score += 1;
+                                        }else {
+                                            data.wrong_list.insert(quiz.index.clone());
+                                        }
+                                    }
+                                    submitted.set(true);
+                                    score_s.set(score);
+                                    data.save();
+                                },
+                                "交卷"
+                            }
+                        )
+                    }
+                },
                     div{
                     class: "quiz-content",
-                    div{
-                        class: "exam-head",
-                        h5 { "{name}类模拟考试 {num_index+1}/{quiz_list.len()}" },
-
-                        if *submitted.get(){
-                            if *score_s.get() >= quiz_type.get_pass_score() {
-                                render!(h5{style: "color: green", "通过, 得分: {score_s}"})
-                            }else {
-                                render!(h5{style: "color: red", "未通过, 得分: {score_s}"})
-                            }
-                        }else {
-                            render!(
-                                button {
-                                    disabled: "{*num_index.get() < quiz_list.len() - 1}",
-                                    onclick: move |_| {
-                                        let mut data = Data::get_from_storage();
-                                        let mut score = 0;
-            
-                                        for (i,quiz) in quiz_list.iter().enumerate(){
-                                            if *answer_s.read().get(i).unwrap() == Some(quiz.answer){
-                                                score += 1;
-                                            }else {
-                                                data.wrong_list.insert(quiz.index.clone());
-                                            }
-                                        }
-                                        submitted.set(true);
-                                        score_s.set(score);
-                                        data.save();
-                                    },
-                                    "交卷"
-                                }
-                            )
-                        }
-                    }
                     div{
                         b{
                             "{quiz.index}. {quiz.question}"

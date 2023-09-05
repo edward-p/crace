@@ -11,7 +11,14 @@
 .content {
   position: fixed;
   width: min(45rem,90%);
-  top: 4rem;
+  top: 3.15rem;
+}
+
+.content b,
+.content p,
+.content button,
+.content blockquote {
+  font-size: 0.9rem;
 }
 
 .exams {
@@ -19,16 +26,10 @@
 }
 
 .quiz-content {
-  height: 36rem;
+  height: min(40rem, 70vh);
   overflow: scroll;
 }
 
-.quiz-content b,
-.quiz-content p,
-.quiz-content button,
-.quiz-content blockquote {
-  font-size: 0.9rem;
-}
 
 .quiz-options button {
   background: var(--bg);
@@ -43,8 +44,8 @@
 }
 
 .quiz-content img {
-  height: 12rem;
-  width: auto;
+  height: auto;
+  width: min(30rem,100%);
 }
 
 .quiz-options {
@@ -54,10 +55,10 @@
 
 .quiz-bottom {
   position: fixed;
-  bottom: 2rem;
+  bottom: 1.5rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.2rem;
   font-size: 0.9rem;
 }
 

@@ -37,9 +37,9 @@ pub fn QuizList(cx: Scope, name: String) -> Element {
             let quiz = use_state(cx, || quiz_next);
 
             render! {
+                h5 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
                 class: "quiz-content",
-                h5 { "{name}类考试 {num_index+1}/{quiz_list.len()}" },
                 div{
                     b{
                         "{quiz.index}. {quiz.question}"
