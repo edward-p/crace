@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::{data::Data, exam_quizlist::ExamQuizList, quizlist::QuizList, wronglist::WrongList};
+use crate::{exam_quizlist::ExamQuizList, quizlist::QuizList, wronglist::WrongList, storage_man::StorageMan};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -18,8 +18,8 @@ enum Route {
         ExamQuizList { name: String },
         #[route("/wronglist")]
         WrongList {},
-        #[route("/clear")]
-        ClearStorage{},
+        #[route("/storage")]
+        StorageMan{},
     #[end_layout]
     #[route("/:..route")]
     PageNotFound {
@@ -37,7 +37,7 @@ fn NavBar(cx: Scope) -> Element {
                 Link { to: Route::PracticeList {}, "顺序练习" },
                 Link { to: Route::ExamList {}, "模拟考试" },
                 Link { to: Route::WrongList {}, "错题列表" },
-                Link { to: Route::ClearStorage {}, "清除记录" },
+                Link { to: Route::StorageMan {}, "学习记录" },
             }
         }
         div{
@@ -107,22 +107,6 @@ fn PageNotFound(cx: Scope, route: Vec<String>) -> Element {
         pre {
             color: "red",
             "log:\nattemped to navigate to: {route:?}"
-        }
-    }
-}
-
-#[inline_props]
-fn ClearStorage(cx: Scope) -> Element {
-    let state = use_state(cx, || "确定清除？".to_string());
-    render! {
-        h4 { "{state}" }
-
-        button{
-            onclick: move |_| {
-                Data::clear();
-                state.set("已清除练习记录！".into());
-            },
-            "确定"
         }
     }
 }
