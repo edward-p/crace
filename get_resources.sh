@@ -23,7 +23,7 @@ iconv --from-code GB18030 "C类题库(${VERSION}).txt" | sed 's/\r$//' > "$curre
 iconv --from-code GB18030 "总题库(${VERSION}).txt" | sed 's/\r$//' > "$current_dir/public/resources/class_all.txt"
 
 mkdir -p "$current_dir/public/resources/pictures";
-rsync -a "总题库附图(${VERSION})/" "$current_dir/public/resources/pictures/"
+cp "总题库附图(${VERSION})/"* "$current_dir/public/resources/pictures/"
 
 cd $current_dir
 rm -rf $tempdir
