@@ -20,6 +20,12 @@ git clone https://github.com/edward-p/crace && cd crace
 ./get_resources.sh
 ```
 
+安装工具链 `wasm32-unknown-unknown`:
+
+```
+rustup target add wasm32-unknown-unknown
+```
+
 安装 `dioxus-cli`:
 
 ```
