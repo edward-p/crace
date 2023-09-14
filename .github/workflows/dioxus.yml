@@ -26,8 +26,6 @@ jobs:
           profile: minimal
           target: wasm32-unknown-unknown
           override: true
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.7.0
       - name: Install Dioxus-CLI (bin)
         uses: taiki-e/install-action@v2
         with:
