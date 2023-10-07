@@ -44,6 +44,3 @@ script = []
 # serve: [dev-server] only
 script = []
 
-[bundle]
-publisher = "edward-p"
-copyright = "Copyright (c) edward-p (BD8BTE). All rights reserved."
